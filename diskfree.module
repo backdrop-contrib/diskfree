@@ -1,0 +1,60 @@
+<?php
+
+/**
+ * @file
+ * Generate reports on the amount of available disk space.
+ *
+ * @author David Kent Norman http://deekayen.net/
+ */
+
+/**
+ * Implements hook_menu().
+ */
+function diskfree_menu() {
+  $items = array();
+  $items['admin/config/system/diskfree'] = array(
+    'title' => 'Diskfree',
+    'description' => 'Configure utility paths and alerts.',
+    'page callback' => 'drupal_get_form',
+    'page arguments' => array('diskfree_admin_settings'),
+    'access arguments' => array('administer site configuration'),
+    'type' => MENU_NORMAL_ITEM,
+    'file' => 'diskfree.admin.inc',
+  );
+  return $items;
+}
+
+/**
+ * Implements hook_cron().
+ */
+function diskfree_cron() {
+  $reported_space = diskfree_check_space();
+  foreach ($reported_space as $mount) {
+  }
+}
+
+function diskfree_check_space() {
+  $space_list = rtrim(`df -H  | grep -vE '^Filesystem|none|cdrom|varrun|varlock|udev' | awk '{ print $4 " " $5 " " $6 }'`);
+  $space_array = explode("\n", $space_list);
+  foreach ($space_array as $space_line) {
+    $reported_space[] = explode(' ', $space_line);
+    // 0 = free space in human-readable bytes
+    // 1 = used percentage
+    // 2 = partition name
+  }
+  return $reported_space;
+}
+
+/**
+ * Return boolean TRUE if the provided percent threshold is exceeded, otherwise FALSE.
+ *
+ * @return bool
+ */
+function _diskfree_over_threshold($percent) {
+  if (preg_replace('/\D/', '', $percent) >= variable_get('diskfree_alert_threshold', '95')) {
+    return TRUE;
+  }
+  else {
+    return FALSE;
+  }
+}
