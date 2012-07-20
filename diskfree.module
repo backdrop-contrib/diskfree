@@ -30,11 +30,27 @@ function diskfree_menu() {
 function diskfree_cron() {
   $reported_space = diskfree_check_space();
   foreach ($reported_space as $mount) {
+    if (_diskfree_over_threshold($mount[1])) {
+      $mail = variable_get('diskfree_alert_email', variable_get('site_mail', ini_get('sendmail_from')));
+      drupal_mail('diskfree', 'alert', $mail, language_default(), array('mount' => $mount));
+    }
   }
 }
 
+/**
+ * Implements hook_mail().
+ */
+function diskfree_mail($key, &$message, $params) {
+  $hostname = rtrim(`hostname`);
+  $langcode = $message['language']->language;
+
+  $message['subject'] = t('Alert: @hostname is @percent full', array('@hostname' => $hostname, '@percent' => $params['mount'][1]), array('langcode' => $langcode));
+  $message['body'][] = t('Running out of space @partition (@percent used, @free avail)
+on @hostname for @site_name', array('@hostname' => $hostname, '@percent' => $params['mount'][1], '@free' => $params['mount'][0], '@partition' => $params['mount'][2], '@site_name' => variable_get('site_name', 'Drupal')), array('langcode' => $langcode));
+}
+
 function diskfree_check_space() {
-  $space_list = rtrim(`df -H  | grep -vE '^Filesystem|none|cdrom|shm|varrun|varlock|udev' | awk '{ print $4 " " $5 " " $6 }'`);
+  $space_list = rtrim(`df -lH  | grep -vE '^Filesystem|none|cdrom|shm|varrun|varlock|udev|ExpanDrive' | awk '{ print $4 " " $5 " " $6 }'`);
   $space_array = explode("\n", $space_list);
   foreach ($space_array as $space_line) {
     $reported_space[] = explode(' ', $space_line);

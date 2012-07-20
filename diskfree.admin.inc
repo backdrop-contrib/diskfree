@@ -8,31 +8,7 @@
  * Settings form to configure utility paths and alerts.
  */
 function diskfree_admin_settings() {
-/*
-  if (!file_exists(variable_get('diskfree_df_path', '/bin/df'))) {
-    $form['diskfree_df_path'] = array(
-      '#type' => 'textfield',
-      '#title' => t('Path to df'),
-      '#default_value' => variable_get('diskfree_df_path', '/bin/df'),
-    );
-  }
-
-  if (!file_exists(variable_get('diskfree_grep_path', '/bin/grep'))) {
-    $form['diskfree_grep_path'] = array(
-      '#type' => 'textfield',
-      '#title' => t('Path to grep'),
-      '#default_value' => variable_get('diskfree_grep_path', '/bin/grep'),
-    );
-  }
-
-  if (!file_exists(variable_get('diskfree_awk_path', '/usr/bin/awk'))) {
-    $form['diskfree_awk_path'] = array(
-      '#type' => 'textfield',
-      '#title' => t('Path to awk'),
-      '#default_value' => variable_get('diskfree_awk_path', '/usr/bin/awk'),
-    );
-  }
-*/
+  $form = array();
   $form['diskfree_alert_threshold'] = array(
     '#type' => 'textfield',
     '#title' => t('Alert threshold percent'),
