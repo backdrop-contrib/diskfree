@@ -31,9 +31,6 @@ function diskfree_requirements($phase) {
 }
 
 function diskfree_uninstall() {
-  variable_del('diskfree_df_path');
-  variable_del('diskfree_grep_path');
-  variable_del('diskfree_awk_path');
   variable_del('diskfree_alert_threshold');
   variable_del('diskfree_alert_email');
 }
