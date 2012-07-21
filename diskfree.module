@@ -14,7 +14,7 @@ function diskfree_menu() {
   $items = array();
   $items['admin/config/system/diskfree'] = array(
     'title' => 'Diskfree',
-    'description' => 'Configure utility paths and alerts.',
+    'description' => 'Configure minimum alert threshold and e-mail destination.',
     'page callback' => 'drupal_get_form',
     'page arguments' => array('diskfree_admin_settings'),
     'access arguments' => array('administer site configuration'),
