@@ -50,7 +50,7 @@ on @hostname for @site_name', array('@hostname' => $hostname, '@percent' => $par
 }
 
 function diskfree_check_space() {
-  $space_list = rtrim(`df -lH  | grep -vE '^Filesystem|none|cdrom|shm|varrun|varlock|udev|ExpanDrive' | awk '{ print $4 " " $5 " " $6 }'`);
+  $space_list = rtrim(`df -lH  | grep -vE '^Filesystem|none|cdrom|shm|varrun|varlock|udev|ExpanDrive|MobileBackups' | awk '{ print $4 " " $5 " " $6 }'`);
   $space_array = explode("\n", $space_list);
   foreach ($space_array as $space_line) {
     $reported_space[] = explode(' ', $space_line);
