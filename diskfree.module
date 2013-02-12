@@ -44,9 +44,9 @@ function diskfree_mail($key, &$message, $params) {
   $hostname = rtrim(`hostname`);
   $langcode = $message['language']->language;
 
-  $message['subject'] = t('Alert: @hostname is @percent full', array('@hostname' => $hostname, '@percent' => $params['mount'][1]), array('langcode' => $langcode));
+  $message['subject'] = t('Alert: @hostname is @percent full', array('@hostname' => $hostname, '@percent' => $params['mount'][1]), $langcode);
   $message['body'][] = t('Running out of space @partition (@percent used, @free avail)
-on @hostname for @site_name', array('@hostname' => $hostname, '@percent' => $params['mount'][1], '@free' => $params['mount'][0], '@partition' => $params['mount'][2], '@site_name' => variable_get('site_name', 'Drupal')), array('langcode' => $langcode));
+on @hostname for @site_name', array('@hostname' => $hostname, '@percent' => $params['mount'][1], '@free' => $params['mount'][0], '@partition' => $params['mount'][2], '@site_name' => variable_get('site_name', 'Drupal')), $langcode);
 }
 
 function diskfree_check_space() {
