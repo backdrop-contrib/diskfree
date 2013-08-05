@@ -31,17 +31,11 @@ function diskfree_requirements($phase) {
 }
 
 /**
- * Implements hook_install().
- */
-function diskfree_install() {
-  variable_set('diskfree_last_cron', array());
-}
-
-/**
  * Implements hook_uninstall().
  */
 function diskfree_uninstall() {
   variable_del('diskfree_alert_threshold');
   variable_del('diskfree_alert_email');
+  variable_del('diskfree_alert_email_freq');
   variable_del('diskfree_last_cron');
 }
