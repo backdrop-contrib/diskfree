@@ -2,6 +2,3 @@ name = Diskfree
 description = "Generate reports on the amount of available disk space on a server with a real commandline."
 core = 7.x
 configure = admin/config/system/diskfree
-files[] = diskfree.module
-files[] = diskfree.install
-files[] = diskfree.admin.inc
