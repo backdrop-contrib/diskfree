@@ -50,7 +50,14 @@ on @hostname for @site_name', array('@hostname' => $hostname, '@percent' => $par
 }
 
 function diskfree_check_space() {
-  $space_list = rtrim(`df -lH  | grep -vE '^Filesystem|none|cdrom|shm|varrun|varlock|udev|ExpanDrive|MobileBackups' | awk '{ print $4 " " $5 " " $6 }'`);
+  // Run df on Mac OS X (Darwin) systems.
+  if (PHP_OS == 'Darwin') {
+    $space_list = rtrim(`df -lH  | grep -vE '^Filesystem|none|cdrom|shm|varrun|varlock|udev|ExpanDrive|MobileBackups' | awk '{ print $4 " " $5 " " $9 }'`);
+  }
+  // Run df on Linux systems.
+  else {
+    $space_list = rtrim(`df -lH  | grep -vE '^Filesystem|none|cdrom|shm|varrun|varlock|udev' | awk '{ print $4 " " $5 " " $6 }'`);
+  }
   $space_array = explode("\n", $space_list);
   foreach ($space_array as $space_line) {
     $reported_space[] = explode(' ', $space_line);
