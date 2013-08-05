@@ -60,15 +60,15 @@ function diskfree_mail($key, &$message, $params) {
 function diskfree_check_space() {
   // Run df on Mac OS X (Darwin) systems.
   if (PHP_OS == 'Darwin') {
-    $space_list = rtrim(`df -lH  | grep -vE '^Filesystem|none|cdrom|shm|varrun|varlock|udev|ExpanDrive|MobileBackups' | awk '{ print $4 " " $5 " " $9 }'`);
+    $space_list = rtrim(`df -lH  | grep -vE '^Filesystem|none|cdrom|shm|varrun|varlock|udev|ExpanDrive|MobileBackups' | awk '{ printf("%s,", $4) } { printf("%s,", $5) } { for(i=9;i<=NF;++i) printf("%s", \$i) } { printf("\\n") }'`);
   }
   // Run df on Linux systems.
   else {
-    $space_list = rtrim(`df -lH  | grep -vE '^Filesystem|none|cdrom|shm|varrun|varlock|udev' | awk '{ print $4 " " $5 " " $6 }'`);
+    $space_list = rtrim(`df -lH  | grep -vE '^Filesystem|none|cdrom|shm|varrun|varlock|udev' | awk '{ print $4 "," $5 "," $6 }'`);
   }
   $space_array = explode("\n", $space_list);
   foreach ($space_array as $space_line) {
-    $reported_space[] = explode(' ', $space_line);
+    $reported_space[] = explode(',', $space_line);
     // 0 = free space in human-readable bytes.
     // 1 = used percentage.
     // 2 = partition name.
