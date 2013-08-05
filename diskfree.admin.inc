@@ -2,6 +2,7 @@
 
 /**
  * @file
+ * Disfree admin settings.
  */
 
 /**
@@ -23,6 +24,9 @@ function diskfree_admin_settings() {
   return system_settings_form($form);
 }
 
+/**
+ * Implements hook_validate().
+ */
 function diskfree_admin_settings_validate($form, &$form_state) {
   $threshold = $form_state['values']['diskfree_alert_threshold'];
   if (!is_numeric($threshold) || $threshold < 0 || $threshold > 100) {

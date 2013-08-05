@@ -45,10 +45,18 @@ function diskfree_mail($key, &$message, $params) {
   $langcode = $message['language']->language;
 
   $message['subject'] = t('Alert: @hostname is @percent full', array('@hostname' => $hostname, '@percent' => $params['mount'][1]), array('langcode' => $langcode));
-  $message['body'][] = t('Running out of space @partition (@percent used, @free avail)
-on @hostname for @site_name', array('@hostname' => $hostname, '@percent' => $params['mount'][1], '@free' => $params['mount'][0], '@partition' => $params['mount'][2], '@site_name' => variable_get('site_name', 'Drupal')), array('langcode' => $langcode));
+  $message['body'][] = t('Running out of space @partition (@percent used, @free avail) on @hostname for @site_name', array(
+    '@hostname' => $hostname,
+    '@percent' => $params['mount'][1],
+    '@free' => $params['mount'][0],
+    '@partition' => $params['mount'][2],
+    '@site_name' => variable_get('site_name', 'Drupal')),
+    array('langcode' => $langcode));
 }
 
+/**
+ * Check disk space avaialble on each disk partition.
+ */
 function diskfree_check_space() {
   // Run df on Mac OS X (Darwin) systems.
   if (PHP_OS == 'Darwin') {
@@ -61,17 +69,19 @@ function diskfree_check_space() {
   $space_array = explode("\n", $space_list);
   foreach ($space_array as $space_line) {
     $reported_space[] = explode(' ', $space_line);
-    // 0 = free space in human-readable bytes
-    // 1 = used percentage
-    // 2 = partition name
+    // 0 = free space in human-readable bytes.
+    // 1 = used percentage.
+    // 2 = partition name.
   }
   return $reported_space;
 }
 
 /**
- * Return boolean TRUE if the provided percent threshold is exceeded, otherwise FALSE.
+ * Check if partition space used exceeds the threshold.
  *
  * @return bool
+ *   Return boolean TRUE if the provided percent threshold is exceeded,
+ *   otherwise FALSE.
  */
 function _diskfree_over_threshold($percent) {
   if (preg_replace('/\D/', '', $percent) >= variable_get('diskfree_alert_threshold', '95')) {

@@ -15,9 +15,9 @@ function diskfree_requirements($phase) {
   $t = get_t();
 
   if ($phase == 'runtime') {
-    // available disk space by partition
+    // Available disk space by partition.
     $disk_report = diskfree_check_space();
-    for ($i = 0, $j = sizeof($disk_report); $i < $j; $i++) {
+    for ($i = 0, $j = count($disk_report); $i < $j; $i++) {
 
       $requirements["diskfree_report_$i"] = array(
         'title' => $t('Usage on @partition', array('@partition' => $disk_report[$i][2])),
@@ -30,6 +30,9 @@ function diskfree_requirements($phase) {
   return $requirements;
 }
 
+/**
+ * Implements hook_uninstall().
+ */
 function diskfree_uninstall() {
   variable_del('diskfree_alert_threshold');
   variable_del('diskfree_alert_email');
