@@ -21,6 +21,23 @@ function diskfree_admin_settings() {
     '#title' => t('Alert email address'),
     '#default_value' => variable_get('diskfree_alert_email', variable_get('site_mail', ini_get('sendmail_from'))),
   );
+  $form['diskfree_alert_email_freq'] = array(
+    '#type' => 'select',
+    '#title' => t('Alert email sending frequency'),
+    '#description' => t('How often to send email alerts per partition.'),
+    '#options' => array(
+      '300' => '5 minutes',
+      '600' => '10 minutes',
+      '900' => '15 minutes',
+      '1800' => '30 minutes',
+      '3600' => '1 hour',
+      '7200' => '2 hours',
+      '14400' => '4 hours',
+      '28800' => '8 hours',
+      '86400' => '1 day',
+    ),
+    '#default_value' => variable_get('diskfree_alert_email_freq', '3600'),
+  );
   return system_settings_form($form);
 }
 
