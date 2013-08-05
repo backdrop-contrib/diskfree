@@ -28,11 +28,21 @@ function diskfree_menu() {
  * Implements hook_cron().
  */
 function diskfree_cron() {
+  $last_cron = variable_get('diskfree_last_cron', array());
+  $email_freq = variable_get('diskfree_alert_email_freq', '3600');
   $reported_space = diskfree_check_space();
+
   foreach ($reported_space as $mount) {
+    // Send alert email if disk space used is over the set threshhold. The
+    // alert email frequency configuration is taken into consideration to
+    // prevent too many emails from being sent per partition.
     if (_diskfree_over_threshold($mount[1])) {
-      $mail = variable_get('diskfree_alert_email', variable_get('site_mail', ini_get('sendmail_from')));
-      drupal_mail('diskfree', 'alert', $mail, language_default(), array('mount' => $mount));
+      if (time() > ($last_cron[$mount[2]] + $email_freq)) {
+        $last_cron[$mount[2]] = time();
+        $mail = variable_get('diskfree_alert_email', variable_get('site_mail', ini_get('sendmail_from')));
+        drupal_mail('diskfree', 'alert', $mail, language_default(), array('mount' => $mount));
+        variable_set('diskfree_last_cron', $last_cron);
+      }
     }
   }
 }
