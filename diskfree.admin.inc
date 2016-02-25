@@ -9,17 +9,18 @@
  * Settings form to configure utility paths and alerts.
  */
 function diskfree_admin_settings() {
+  $config = config('diskfree.settings');
   $form = array();
   $form['diskfree_alert_threshold'] = array(
     '#type' => 'textfield',
     '#title' => t('Alert threshold percent'),
     '#description' => t('An integer between 0 and 100 which is the minimum disk space to trigger an alert of low disk space. A value of 100 effectively disables alerts.'),
-    '#default_value' => variable_get('diskfree_alert_threshold', '95'),
+    '#default_value' => $config->get('alert_threshold'),
   );
   $form['diskfree_alert_email'] = array(
     '#type' => 'textfield',
     '#title' => t('Alert email address'),
-    '#default_value' => variable_get('diskfree_alert_email', variable_get('site_mail', ini_get('sendmail_from'))),
+    '#default_value' => $config->get('alert_email', config_get('system.core', 'site_mail')),
   );
   $form['diskfree_alert_email_freq'] = array(
     '#type' => 'select',
@@ -36,9 +37,16 @@ function diskfree_admin_settings() {
       '28800' => '8 hours',
       '86400' => '1 day',
     ),
-    '#default_value' => variable_get('diskfree_alert_email_freq', '3600'),
+    '#default_value' => $config->get('alert_email_freq'),
   );
-  return system_settings_form($form);
+
+  $form['actions']['#type'] = 'actions';
+  $form['actions']['submit'] = array(
+    '#type' => 'submit',
+    '#value' => t('Save configuration'),
+  );
+
+  return $form;
 }
 
 /**
@@ -54,4 +62,15 @@ function diskfree_admin_settings_validate($form, &$form_state) {
   if ($mail != '' && !valid_email_address($mail)) {
     form_set_error('diskfree_alert_email', t('The e-mail address %mail is not valid.', array('%mail' => $mail)));
   }
+}
+
+/**
+ * Implements hook_submit().
+ */
+function diskfree_admin_settings_submit($form, &$form_state) {
+  $config = config('diskfree.settings');
+  $config->set('alert_threshold', $form_state['values']['diskfree_alert_threshold']);
+  $config->set('alert_email', $form_state['values']['diskfree_alert_email']);
+  $config->set('alert_email_freq', $form_state['values']['diskfree_alert_email_freq']);
+  $config->save();
 }

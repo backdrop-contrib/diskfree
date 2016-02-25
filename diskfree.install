@@ -29,13 +29,3 @@ function diskfree_requirements($phase) {
 
   return $requirements;
 }
-
-/**
- * Implements hook_uninstall().
- */
-function diskfree_uninstall() {
-  variable_del('diskfree_alert_threshold');
-  variable_del('diskfree_alert_email');
-  variable_del('diskfree_alert_email_freq');
-  variable_del('diskfree_last_cron');
-}

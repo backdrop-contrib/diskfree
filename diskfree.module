@@ -8,6 +8,18 @@
  */
 
 /**
+ * Implements hook_config_info();
+ */
+function diskfree_config_info() {
+  $prefixes = array();
+  $prefixes = array(
+    'label' => t('Diskfree settings'),
+    'group' => t('Configuration'),
+  );
+  return $prefixes;
+}
+
+/**
  * Implements hook_menu().
  */
 function diskfree_menu() {
@@ -15,7 +27,7 @@ function diskfree_menu() {
   $items['admin/config/system/diskfree'] = array(
     'title' => 'Diskfree',
     'description' => 'Configure minimum alert threshold and e-mail destination.',
-    'page callback' => 'drupal_get_form',
+    'page callback' => 'backdrop_get_form',
     'page arguments' => array('diskfree_admin_settings'),
     'access arguments' => array('administer site configuration'),
     'type' => MENU_NORMAL_ITEM,
@@ -28,8 +40,8 @@ function diskfree_menu() {
  * Implements hook_cron().
  */
 function diskfree_cron() {
-  $last_cron = variable_get('diskfree_last_cron', array());
-  $email_freq = variable_get('diskfree_alert_email_freq', '3600');
+  $last_cron = config_get('diskfree.settings', 'last_cron';
+  $email_freq = config_get('diskfree.settings', 'alert_email_freq');
   $reported_space = diskfree_check_space();
 
   foreach ($reported_space as $mount) {
@@ -40,8 +52,8 @@ function diskfree_cron() {
       if (time() > ($last_cron[$mount[2]] + $email_freq)) {
         $last_cron[$mount[2]] = time();
         $mail = variable_get('diskfree_alert_email', variable_get('site_mail', ini_get('sendmail_from')));
-        drupal_mail('diskfree', 'alert', $mail, language_default(), array('mount' => $mount));
-        variable_set('diskfree_last_cron', $last_cron);
+        backdrop_mail('diskfree', 'alert', $mail, language_default(), array('mount' => $mount));
+        config_set('diskfree.settings', 'last_cron', $last_cron);
       }
     }
   }
@@ -60,7 +72,7 @@ function diskfree_mail($key, &$message, $params) {
     '@percent' => $params['mount'][1],
     '@free' => $params['mount'][0],
     '@partition' => $params['mount'][2],
-    '@site_name' => variable_get('site_name', 'Drupal')),
+    '@site_name' => config_get('system.core', 'site_name')),
     array('langcode' => $langcode));
 }
 
@@ -94,7 +106,7 @@ function diskfree_check_space() {
  *   otherwise FALSE.
  */
 function _diskfree_over_threshold($percent) {
-  if (preg_replace('/\D/', '', $percent) >= variable_get('diskfree_alert_threshold', '95')) {
+  if (preg_replace('/\D/', '', $percent) >= config_get('diskfree.settings', 'alert_threshold')) {
     return TRUE;
   }
   else {

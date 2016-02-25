@@ -1,4 +1,4 @@
 name = Diskfree
 description = "Generate reports on the amount of available disk space on a server with a real commandline."
-core = 7.x
+backdrop = 1.x
 configure = admin/config/system/diskfree
