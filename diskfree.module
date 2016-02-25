@@ -40,7 +40,7 @@ function diskfree_menu() {
  * Implements hook_cron().
  */
 function diskfree_cron() {
-  $last_cron = config_get('diskfree.settings', 'last_cron';
+  $last_cron = config_get('diskfree.settings', 'last_cron');
   $email_freq = config_get('diskfree.settings', 'alert_email_freq');
   $reported_space = diskfree_check_space();
 
