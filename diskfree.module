@@ -12,9 +12,9 @@
  */
 function diskfree_config_info() {
   $prefixes = array();
-  $prefixes = array(
-    'label' => t('Diskfree settings'),
+  $prefixes['diskfree.settings'] = array(
     'group' => t('Configuration'),
+    'label' => t('Diskfree settings'),
   );
   return $prefixes;
 }
