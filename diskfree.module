@@ -49,8 +49,8 @@ function diskfree_cron() {
     // alert email frequency configuration is taken into consideration to
     // prevent too many emails from being sent per partition.
     if (_diskfree_over_threshold($mount[1])) {
-      if (time() > ($last_cron[$mount[2]] + $email_freq)) {
-        $last_cron[$mount[2]] = time();
+      if (REQUEST_TIME > ($last_cron[$mount[2]] + $email_freq)) {
+        $last_cron[$mount[2]] = REQUEST_TIME;
         $mail = config_get('diskfree.settings', 'alert_email');
         backdrop_mail('diskfree', 'alert', $mail, language_default(), array('mount' => $mount));
         config_set('diskfree.settings', 'last_cron', $last_cron);
