@@ -1,7 +1,7 @@
 Diskfree
 ========
 
-Get a status report in [Backdrop](https://backdropcms.org/)'s status report and
+Get a disk utilization report in [Backdrop](https://backdropcms.org/)'s status report and
 a cron-triggered e-mail warning when locally mounted disk space on your Backdrop
 server reaches a preset threshold.
 
