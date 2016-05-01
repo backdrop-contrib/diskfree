@@ -51,7 +51,7 @@ function diskfree_cron() {
     if (_diskfree_over_threshold($mount[1])) {
       if (time() > ($last_cron[$mount[2]] + $email_freq)) {
         $last_cron[$mount[2]] = time();
-        $mail = config_get('diff.settings', 'diskfree_alert_email');
+        $mail = config_get('diskfree.settings', 'alert_email');
         backdrop_mail('diskfree', 'alert', $mail, language_default(), array('mount' => $mount));
         config_set('diskfree.settings', 'last_cron', $last_cron);
       }
