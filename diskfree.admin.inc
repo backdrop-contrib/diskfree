@@ -73,4 +73,5 @@ function diskfree_admin_settings_submit($form, &$form_state) {
   $config->set('alert_email', $form_state['values']['diskfree_alert_email']);
   $config->set('alert_email_freq', $form_state['values']['diskfree_alert_email_freq']);
   $config->save();
+  watchdog('diskfree', t('Diskfree configuration updated.'), array(), WATCHDOG_INFO, l(t('Configure'), 'admin/config/system/diskfree'));
 }
