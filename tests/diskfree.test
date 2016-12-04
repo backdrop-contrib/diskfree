@@ -1,0 +1,37 @@
+<?php
+/**
+ * @file
+ * Tests for Diskfree.
+ */
+
+/**
+ * Functional tests for Diskfree.
+ */
+class DiskfreeTestCase extends BackdropWebTestCase {
+  public static function getInfo() {
+    return array(
+      'name' => 'Diskfree',
+      'description' => 'Tests some diskfree parts.',
+      'group' => 'Diskfree',
+    );
+  }
+
+  public function setUp() {
+    parent::setUp('diskfree');
+    $this->admin_user = $this->backdropCreateUser(array('administer site configuration', 'access site reports'));
+  }
+
+  function testDiskfree() {
+    $this->backdropLogin($this->admin_user);
+
+    $this->backdropGet('admin/config/system/diskfree');
+    $this->assertFieldByXPath("//input[@id='edit-diskfree-alert-threshold' and @name='diskfree_alert_threshold']", NULL, 'Alert threshold field is present.');
+    $this->assertFieldByXPath("//input[@id='edit-diskfree-alert-email' and @name='diskfree_alert_email']", NULL, 'Alert email field is present.');
+    $this->assertFieldByXPath("//select[@id='edit-diskfree-alert-email-freq' and @name='diskfree_alert_email_freq']", NULL, 'Alert email frequency field is present.');
+    $this->assertFieldByXPath("//input[@id='edit-submit' and @name='op']", NULL, 'Save configuration button is present.');
+
+    $this->backdropGet('admin/reports/status');
+    // This ought to be localized.
+    $this->assertText('Usage on /');
+  }
+}

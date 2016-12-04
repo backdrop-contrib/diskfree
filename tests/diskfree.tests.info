@@ -1,0 +1,5 @@
+[DiskfreeTestCase]
+name = Diskfree
+description = Check various parts of Diskfree.
+group = Diskfree
+file = diskfree.test
