@@ -8,14 +8,6 @@
  * Functional tests for Diskfree.
  */
 class DiskfreeTestCase extends BackdropWebTestCase {
-  public static function getInfo() {
-    return array(
-      'name' => 'Diskfree',
-      'description' => 'Tests some diskfree parts.',
-      'group' => 'Diskfree',
-    );
-  }
-
   public function setUp() {
     parent::setUp('diskfree');
     $this->admin_user = $this->backdropCreateUser(array('administer site configuration', 'access site reports'));
