@@ -29,7 +29,7 @@ If you prefer, you could also just copy a [bash script](https://gist.github.com/
 Current Maintainer
 ------------------
 
-- David Norman (https://github.com/deekayen)
+- None
 
 Credits
 -----------
